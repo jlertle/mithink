@@ -1,0 +1,1 @@
+module.exports = if typeof window isnt 'undefined' then require('./client') else require('./socket.io')

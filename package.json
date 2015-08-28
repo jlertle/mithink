@@ -1,0 +1,32 @@
+{
+  "name": "mithink",
+  "version": "1.0.0",
+  "description": "meteor-like rethinkdb integrations for socket.io, supports mithril.js out of the box on the client-side",
+  "main": "./lib/index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ondreian/methink.git"
+  },
+  "keywords": [
+    "socket.io",
+    "rethinkdb",
+    "mithril.js",
+    "meteor"
+  ],
+  "author": "Benjamin Clos",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ondreian/methink/issues"
+  },
+  "homepage": "https://github.com/ondreian/methink#readme",
+  "devDependencies": {
+    "which": "^1.1.1"
+  },
+  "dependencies": {
+    "debug": "^2.2.0",
+    "mithril": "^0.2.0"
+  }
+}
