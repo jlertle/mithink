@@ -21,7 +21,7 @@ exports.wrap = (Mithink)->
       Mithink.lastError(err)
       table._loading = false if table._loading
       # resync errored data
-      table.sync(err.data)
+      table.sync(err.data) if err.data && err.data.id
       Mithink.errorHandler(err) if Mithink.errorHandler
 
     for action, handler of Mithink.adapter.Table.handlers

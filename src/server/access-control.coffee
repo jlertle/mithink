@@ -1,5 +1,6 @@
 utils = require '../utils'
 debug = require('debug')("mithink:security")
+log   = require('debug')('mithink:actions')
 
 errorHandler = require './error-handler'
 
@@ -25,10 +26,11 @@ Access_Control = (Bus)->
     return (args...)->
       checkpoint = Bus.checkpoint.call(ctx)
       if checkpoint && not checkpoint(@socket)
-        msg = "unauthorized attempt to perform #{ctx.action} on the #{ctx.model._name} table"
+        msg = "unauthorized attempt to perform #{ctx.action} on #{ctx.model._name} table"
         debug(msg)
         return errorHandler.call(ctx, 401, args[0], message: msg)
 
+      log "#{ctx.socket.id} performing #{ctx.action.toUpperCase()} on #{ctx.model._name.toUpperCase()} -- params: #{JSON.stringify(args)}"
       action.apply(ctx, args)
 
 

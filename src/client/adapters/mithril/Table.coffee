@@ -107,6 +107,5 @@ Table.handlers =
       @
 
     sync: (doc)->
-      console.log @
       @first(id: doc.id).set(doc)
       @

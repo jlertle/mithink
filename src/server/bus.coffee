@@ -20,31 +20,32 @@ Bus.extend = (model)->
   model.channel          = Bus.io.of utils.channelName model._name
   model.registerActions  = Bus._actionable_.bind(model.__mithink__)
 
-  # intialize our initial actions
+  # intialize our baseline actions
   model.registerActions(actions)
 
   model.channel.on "connection", Bus.wrap.bind { model: model }
 
   Bus
 
+# don't wireUp a model more than once
 Bus.wireUp = (model)->
+  unless ~Bus.__tables__.indexOf(model._name)
+    Bus.__tables__.push(model._name) 
 
-  Bus.__tables__.push(model._name) unless ~Bus.__tables__.indexOf(model._name)
+    model.changes().then (feed)->
+      feed.each (err, doc)->
+        if err
+          debug(err)
+          throw err
+        
+        # deleted
+        unless doc.isSaved()
+          debug "emitting delete..."
+          return model.channel.emit 'delete', doc 
 
-  model.changes().then (feed)->
-    feed.each (err, doc)->
-      if err
-        debug(err)
-        throw err
-      
-      # deleted
-      unless doc.isSaved()
-        debug "emitting delete..."
-        return model.channel.emit 'delete', doc 
-
-      # created or saved
-      debug "emitting upsert..."
-      return model.channel.emit 'upsert', doc
+        # created or saved
+        debug "emitting upsert..."
+        return model.channel.emit 'upsert', doc
 
   Bus
 
@@ -66,6 +67,6 @@ Bus.wrap = (socket)->
       socket.on action, Bus.__protect__.call( utils.merge(ctx, action: action), handler )
 
 Bus._actionable_ = (opts = {})->
-  @ctions[action] = handler for action, handler of opts
+  @actions[action] = handler for action, handler of opts
 
 module.exports = Bus
