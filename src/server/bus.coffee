@@ -15,19 +15,16 @@ Bus.NAMESPACE    = "methink"
 require('./access-control')(Bus)
 
 Bus.extend = (model)->
-  model.__mithink__= actions : {}
+  model.__mithink__      = actions : {}
+  model.guard            = Bus.guard.bind { model: model }
+  model.channel          = Bus.io.of utils.channelName model._name
+  model.registerActions  = Bus._actionable_.bind(model.__mithink__)
 
-  model.guard           = Bus.guard.bind { model: model }
-  
-  model.registerActions  = (opts={})->
-    for action, handler of opts
-      model.__mithink__.actions[action] = handler
-
-
+  # intialize our initial actions
   model.registerActions(actions)
 
-  model.channel         = Bus.io.of utils.channelName model._name
   model.channel.on "connection", Bus.wrap.bind { model: model }
+
   Bus
 
 Bus.wireUp = (model)->
@@ -68,7 +65,7 @@ Bus.wrap = (socket)->
     do (action, handler)->
       socket.on action, Bus.__protect__.call( utils.merge(ctx, action: action), handler )
 
-Bus.action = (action)->
-  Bus.__actions__[action]
+Bus._actionable_ = (opts = {})->
+  @ctions[action] = handler for action, handler of opts
 
 module.exports = Bus
