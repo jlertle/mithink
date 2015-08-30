@@ -11,7 +11,7 @@ exports.update = (data)->
   @model.save(data, { conflict: "update" }).catch errorHandler.bind(@, 400, data)
 
 exports.destroy = (data)->
-
+  debug "#{@socket.id} deleting id: #{data.id} in table #{@model._name}"
   @model
     .get(data.id)
     .then (instance)=>

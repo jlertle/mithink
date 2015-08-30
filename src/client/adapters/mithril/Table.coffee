@@ -18,13 +18,15 @@ module.exports = class Table
   sortBy: (sort)->
     key = Object.keys(sort)[0]
     mod = sort[key]
-    
+
     @rows Array.prototype.sort.call @rows(), (a, b)->
       weight = a.get(key) - b.get(key)
       return -1 * weight if mod is -1
       return weight
-
     @
+
+  isLoading: ->
+    return @_loading || false
 
   map: (fn)->
     Array.prototype.map.call @rows(), fn
@@ -83,7 +85,7 @@ module.exports = class Table
     @channel.on(evt, handler)
     @
 
-Table.handlers = 
+Table.handlers =
     load: (data)->
       @_loading = false
       @_errored = false
