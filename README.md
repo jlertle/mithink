@@ -2,7 +2,7 @@
 
 `npm install mithink --save`
 
-A plug-n-play module which aims for Meteor.js like capabilities without the overhead for transparently syncing a RethinkDB instance across clients.  Supports [Mithril.js](http://mithril.js.org/) on the client-side out of the box, but it's easy enough to roll your own adapter for Angular/Ember/Vue/whatever the hot framework of the week is.
+A plug-n-play module which aims for Meteor.js like capabilities without the overhead for transparently syncing a RethinkDB instance across clients using Socket.IO and [Mithril.js](http://mithril.js.org/) on the client-side out of the box, but it's easy enough to roll your own adapter for Angular/Ember/Vue/whatever the hot framework of the week is.
 
 ### Under The Hood
 
@@ -19,12 +19,14 @@ io        = require('socket.io')
 # set up the event bus
 rethinkdb.bus(io)
 
+# this returns an extended version of the thinky Model 
 Thing = rethinkdb.createModel "Thing", {
   name   : rethinkdb.type.string()
   id     : rethinkdb.type.number()
   active : rethinkdb.type.boolean()
 }
 
+# add access control
 Thing.guard
   load: (socket)->
     return true if socket.session.authenticated
@@ -38,7 +40,7 @@ Thing.guard
     return true is socket.session.whatever
     return false
 
-# the socket.io channel for Things
+# add or override actions
 Thing.registerActions
   mapreduce: (data)->
     # a special query
@@ -91,8 +93,36 @@ Things =
 
 m.mount(document.getElementById("things"), Things)
 ```
+custom events & other random examples
 
-## Client-side Inbound Events
+```coffeescript
+r.require('mithink')()
+r.redraw = m.redraw
+
+# register a global default event handler
+
+r.adapter.Table.handler.mapreduce = (data)->
+  # do your fancy stuff
+
+invoices = r.table('Invoices')
+
+invoices.on "pivot", (data)->
+  r.table("Invoices:pivot").reset(data).finishLoading()
+  r.redraw()
+
+# create a virtual table on the client
+# it will be initalized in a loading state which you must manually reset
+pivot = r.table("Invoices:pivot")
+
+# emit the pivot event to the server
+r.table('Invoices').emit('pivot')
+
+# you can then use the r.table("Invoices:pivot") table in your views
+
+```
+
+
+## Client-side Inbound Events Catalog
 
 > load
 

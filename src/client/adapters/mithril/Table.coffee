@@ -8,6 +8,11 @@ module.exports = class Table
 
   constructor: (rows=[])->
     @rows = m.prop rows.map @_rowize.bind(@)
+    @_loading = false
+    @
+
+  finishLoading: ->
+    @_loading = false
     @
 
   _rowize: (attrs)->
@@ -83,6 +88,14 @@ module.exports = class Table
 
   on: (evt, handler)->
     @channel.on(evt, handler)
+    @
+
+  once: (evt, handler)->
+    @channel.once(evt, handler)
+    @
+
+  emit: (evt, data)->
+    @channel.emit(evt, data)
     @
 
 Table.handlers =
