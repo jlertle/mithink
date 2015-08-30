@@ -16,3 +16,10 @@ exports.keys = (obj)->
   keys = []
   keys.push(key) for key, val of obj
   keys
+
+exports.merge = (objs...)->
+  memo = {}
+  for obj in objs
+    memo[key] = val for key, val of obj
+  memo
+  
