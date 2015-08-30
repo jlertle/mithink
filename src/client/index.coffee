@@ -1,4 +1,4 @@
-Mithril    = require('../adapters/mithril')
+Mithril    = require('./adapters/mithril')
 extensions = require('./extensions')
 
 Mithink = (host, adapter)->
@@ -14,6 +14,5 @@ Mithink.createConnection = (channel)->
   location = [ Mithink.host ]
   location.push channel if channel
   return io location.join('/')
-
 
 module.exports = Mithink

@@ -24,7 +24,6 @@ module.exports = class Row
         @attributes[attr](v)
       else
         @attributes[attr] = m.prop(v)
-
     @
 
   has: (attr)->
@@ -36,6 +35,5 @@ module.exports = class Row
 
   toJSON: ->
     j = {}
-    for attr, prop of @attributes
-      j[attr] = @get(attr)
+    j[attr] = @get(attr) for attr, prop of @attributes
     j

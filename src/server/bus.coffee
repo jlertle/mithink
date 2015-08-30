@@ -1,15 +1,11 @@
+thinky  = require "thinky"
+
 debug   = require('debug')("mithink:bus")
 actions = require './actions'
 utils   = require '../utils'
 
 Bus = (io)-> 
   Bus.io = io
-
-  Bus.io.on "connection", (socket)->
-    socket.emit Bus.NAMESPACE, {
-      tables: Bus.__tables__
-    }
-    
   Bus
 
 Bus.__actions__  = {}
@@ -17,7 +13,6 @@ Bus.__tables__   = []
 Bus.NAMESPACE    = "methink"
 
 require('./access-control')(Bus)
-
 
 Bus.extend = (model)->
   model.guard    = Bus.guard.bind { model: model }
@@ -56,12 +51,15 @@ Bus.wrap = (socket)->
     model  : @model
   }
   
-  # load the channel 
-  Bus.action('load').call(ctx)
+  # protect loading the channel
+  ctx.action = 'load'
+  Bus.__protect__.call(ctx, Bus.action('load'))()
 
-  for action in Object.keys(Bus.__actions__)
-    ctx.action = action
-    socket.on action, Bus.__protect__.call ctx, Bus.action(action)
+  for action, handler of Bus.__actions__
+    do (action, handler)->
+      instance = utils.shallowCopy(ctx)
+      instance.action = action
+      socket.on action, Bus.__protect__.call(instance, handler)
     
 
 Bus.registerActions = (opts)->
@@ -89,6 +87,7 @@ Bus.registerModels = (modelorModelsObj)->
     return Bus
   
   Bus.extend(model).wireUp(model)
+
   Bus
 
 module.exports = Bus

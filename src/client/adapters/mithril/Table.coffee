@@ -63,6 +63,9 @@ module.exports = class Table
     @rows rows.map @_rowize.bind(@)
     @
 
+  get: (id)->
+    @first id: id
+
   all : ->
     @rows()
 
@@ -76,17 +79,14 @@ module.exports = class Table
     @map (row)->
       row.toJSON()
 
-  on: (args...)->
-    @channel.on.apply @channel, args
+  on: (evt, handler)->
+    @channel.on(evt, handler)
+    @
 
-  once: (args...)->
-    @channel.once.apply @channel, args
-
-  off: (args...)->
-    @channel.off.apply @channel, args
-
-  handlers: {
+Table.handlers = 
     load: (data)->
+      @_loading = false
+      @_errored = false
       @reset(data)
       @
 
@@ -103,4 +103,8 @@ module.exports = class Table
       @rows @filter (row)->
         row.get('id') isnt doc.id
       @
-  }
+
+    sync: (doc)->
+      console.log @
+      @first(id: doc.id).set(doc)
+      @

@@ -1,4 +1,7 @@
 utils = require '../utils'
+debug = require('debug')("mithink:security")
+
+errorHandler = require './error-handler'
 
 Access_Control = (Bus)->
   # store for our access control functions
@@ -6,7 +9,7 @@ Access_Control = (Bus)->
 
   # definite access control middleware for actions
   Bus.guard  = (opts)->
-    for action, check in Object.keys(opts)
+    for action, check of opts
       Bus.__access_control__[ utils.namespace(@model._name, action) ] = check
 
   # getter for an access control middleware
@@ -20,17 +23,11 @@ Access_Control = (Bus)->
 
     # action wrapped by check
     return (args...)->
-      
-      if checkpoint = Bus.checkpoint.call(ctx) && not checkpoint(@socket)
-        
-        debug "unauthorized attempt to perform #{ctx.action} on the #{ctx.model._name} table"
-
-        return ctx.socket.emit "http_error", {
-          code    : 403
-          message : "unauthorized attempt to perform #{ctx.action} on the #{ctx.model._name} table"
-          table   : ctx.model._name
-          action  : ctx.action
-        }
+      checkpoint = Bus.checkpoint.call(ctx)
+      if checkpoint && not checkpoint(@socket)
+        msg = "unauthorized attempt to perform #{ctx.action} on the #{ctx.model._name} table"
+        debug(msg)
+        return errorHandler.call(ctx, 401, args[0], message: msg)
 
       action.apply(ctx, args)
 
