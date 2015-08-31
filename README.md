@@ -40,6 +40,17 @@ Thing.guard
     return true is socket.session.whatever
     return false
 
+  # Async access control transparently handles Promises
+  connection: (socket)->
+    return new Promise (resolve, reject)->
+      Dosomestuff().then (passed)->
+        if passed
+          return resolve(true)
+        
+        # if you want to override the default error message 
+        # for this check in your logs because it is special
+        reject message: "you failed the Dosomestuff check"
+
 # add or override actions
 Thing.registerActions
   mapreduce: (data)->
@@ -130,7 +141,7 @@ populdate a client-side table from RethinkDB.  You can add params to it which ar
 
 > sync
 
-When an update is attempted, but failed due to any reason, the table on the client side resyncs the document that failed to update by to the originally value and emits an `http_error`
+When an update is attempted, but failed due to any reason, the table on the client side resyncs the document that failed to update back to the originally value and emits an `http_error`
 
 > remove
 
@@ -154,3 +165,21 @@ Anytime something unexpected occurs, from a failed permission check to a failed 
   action  : "action"
 }
 ```
+
+## Server-side Inbound Events Catalog
+
+The defaults are as follows:
+
+> load
+
+> create
+
+> update
+
+> destroy
+
+> sync
+
+> http_error
+
+A variety of situations can cause an `http_error` event to be emitted from the server, a few examples are anytime `thinky` catches an error, or a permission check is not passed.

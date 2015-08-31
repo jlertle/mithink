@@ -22,4 +22,10 @@ exports.merge = (objs...)->
   for obj in objs
     memo[key] = val for key, val of obj
   memo
+
+exports.allowAll = ->
+  true
+
+exports.denyAll = ->
+  false
   

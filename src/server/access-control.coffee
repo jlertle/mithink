@@ -14,8 +14,8 @@ Access_Control = (Bus)->
       Bus.__access_control__[ utils.namespace(@model._name, action) ] = check
 
   # getter for an access control middleware
-  Bus.checkpoint = (action)->
-    Bus.__access_control__[ utils.namespace(@model._name, @action) ]
+  Bus.checkpoint = ->
+    Bus.__access_control__[ utils.namespace(@model._name, @action) ] || utils.allowAll
 
   # called before an action is initialized
   Bus.__protect__ = (action)->
@@ -24,15 +24,24 @@ Access_Control = (Bus)->
 
     # action wrapped by check
     return (args...)->
-      checkpoint = Bus.checkpoint.call(ctx)
-      if checkpoint && not checkpoint(@socket)
-        msg = "unauthorized attempt to perform #{ctx.action} on #{ctx.model._name} table"
-        debug(msg)
-        return errorHandler.call(ctx, 401, args[0], message: msg)
+      passed  = Bus.checkpoint.call(ctx)(ctx.socket)
+      denyMessage = "unauthorized attempt to perform #{ctx.action} on #{ctx.model._name} table"
+      
+      if passed.then
+        return passed
+          .then ()->
+            log "#{ctx.socket.id} performing #{ctx.action.toUpperCase()} on #{ctx.model._name.toUpperCase()} -- params: #{JSON.stringify(args)}"
+            action.apply(ctx, args)
+          .catch (err={})-> 
+            debug(err.message || denyMessage)
+            errorHandler.call(ctx, 401, args[0], message: err.message || denyMessage)
 
-      log "#{ctx.socket.id} performing #{ctx.action.toUpperCase()} on #{ctx.model._name.toUpperCase()} -- params: #{JSON.stringify(args)}"
-      action.apply(ctx, args)
+      if passed
+        log "#{ctx.socket.id} performing #{ctx.action.toUpperCase()} on #{ctx.model._name.toUpperCase()} -- params: #{JSON.stringify(args)}"
+        return action.apply(ctx, args) 
+      
+      debug(denyMessage)
+      return errorHandler.call(ctx, 401, args[0], message: denyMessage)
 
 
-module.exports = Access_Control
-  
+module.exports = Access_Control  

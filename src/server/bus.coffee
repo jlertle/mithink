@@ -1,8 +1,9 @@
-thinky  = require "thinky"
+thinky       = require "thinky"
+debug        = require('debug')("mithink:bus")
+actions      = require './actions'
+utils        = require '../utils'
+errorHandler = require './error-handler'
 
-debug   = require('debug')("mithink:bus")
-actions = require './actions'
-utils   = require '../utils'
 
 Bus = (io)-> 
   Bus.io = io
@@ -51,20 +52,22 @@ Bus.wireUp = (model)->
 
 
 Bus.wrap = (socket)->
-  debug "#{socket.id} joining #{@model._name}"
-  
   # generate the context that the client events will be bound to in this channel
+  
   ctx = {
     socket : socket
     model  : @model
   }
-  
-  # protect loading the channel
-  Bus.__protect__.call( utils.merge(ctx, action: 'load' ), @model.__mithink__.actions.load  )()
 
-  for action, handler of @model.__mithink__.actions
-    do (action, handler)->
-      socket.on action, Bus.__protect__.call( utils.merge(ctx, action: action), handler )
+  # protect joining a channel
+  do Bus.__protect__.call utils.merge( ctx, action: 'connection' ), ->
+
+    # protect the load event of the channel
+    do Bus.__protect__.call( utils.merge(ctx, action: 'load' ), @model.__mithink__.actions.load  )
+
+    for action, handler of @model.__mithink__.actions
+      do (action, handler)->
+        socket.on action, Bus.__protect__.call( utils.merge(ctx, action: action), handler )
 
 Bus._actionable_ = (opts = {})->
   @actions[action] = handler for action, handler of opts
