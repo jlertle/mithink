@@ -1,7 +1,7 @@
 {
   "name": "mithink",
-  "version": "1.0.0",
-  "description": "meteor-like rethinkdb integrations for socket.io, supports mithril.js out of the box on the client-side",
+  "version": "1.0.1",
+  "description": "meteor-like rethinkdb integrations for socket.io using thinky with support for mithril.js out of the box on the client-side",
   "main": "./lib/index.js",
   "scripts": {
     "test": "npm test"
