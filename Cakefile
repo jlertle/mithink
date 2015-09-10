@@ -239,4 +239,13 @@ mocha = (options, callback) ->
 # **then** invoke launch passing docco command
 docco = (callback) ->
   #if moduleExists('docco')
-  walk 'src', (err, files) -> launch 'docco', files, callback
+  try
+    files = require('./.docco')
+  catch e
+    # silence is golden
+
+  if files
+    return launch 'docco', files, callback || ->
+  
+  
+  walk 'src', (err, files) -> launch 'docco', files, callback || ->
