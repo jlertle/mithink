@@ -15,6 +15,7 @@ exports.wrap = (Mithink)->
     return Mithink._table(name) if Mithink._table(name)
     table          = Mithink.__tables__[name] = Mithink.adapter.Table.create()
     table.name     = name
+    table.Row      = Mithink.adapter.Row
     table.channel  = Mithink.createConnection(name)
     table._loading = true
 

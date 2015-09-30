@@ -11,14 +11,39 @@ Bus = (io)->
 
 Bus.__actions__  = {}
 Bus.__tables__   = []
-Bus.NAMESPACE    = "methink"
+Bus.NAMESPACE    = "mithink"
 
 require('./access-control')(Bus)
 
 Bus.extend = (model)->
   model.__mithink__      = actions : {}
   model.guard            = Bus.guard.bind { model: model }
-  model.channel          = Bus.io.of utils.channelName model._name
+
+  ###*
+  # @class Server.Model 
+  # @description The Server-side Model object
+  # @property channel { Socket.IO.Channel } The socket.io channel for a given model
+  # @example
+  #   Thing = mithink.createModel 'Thing', schema, options
+  ###
+
+  model.channel = Bus.io.of utils.channelName model._name
+
+  ###*
+  # add custom events to a channel so that they can have access control handlers
+  # @class Server.Model 
+  # @function Server.Model#registerActions
+  # @param {Object} actions - set of actions and handlers to register, will over-write preexisting handlers
+  # @example
+  # Thing.registerActions {
+  #   mapreduce: (data)->
+  #     return false unless socket.authenticated
+  #     Thing.map(m).reduce(r).exec().then (data)=>
+  #       # send data back to client that asked for it on the channel the event was received on
+  #       this.socket.emit "mapreduce", data
+  # }
+  ###
+
   model.registerActions  = Bus._actionable_.bind(model.__mithink__)
 
   # intialize our baseline actions

@@ -1,10 +1,10 @@
 m = require 'mithril'
 
-module.exports = class Row
-  @create : (attrs)->
-    new @(attrs)
+module.exports = class Mithril_Row
+  @create : (attrs, table)->
+    new @(attrs, table)
 
-  constructor: (attrs)->
+  constructor: (attrs, @table)->
     @set(@defaults) if @defaults
     @set(attrs)
 

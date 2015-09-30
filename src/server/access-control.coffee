@@ -8,7 +8,18 @@ Access_Control = (Bus)->
   # store for our access control functions
   Bus.__access_control__ = {}
 
-  # definite access control middleware for actions
+  ###*
+  # defines access control middleware for actions
+  # @class Server.Model 
+  # @function Server.Model#guard
+  # @param {Object} opts - an Object of actions to protect, and how to protect them
+  # @example
+  # Thing.guard {
+  #   connection: (socket)->
+  #     return false unless socket.authenticated
+  #     return true
+  # }
+  ###
   Bus.guard  = (opts)->
     for action, check of opts
       Bus.__access_control__[ utils.namespace(@model._name, action) ] = check
