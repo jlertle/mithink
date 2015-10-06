@@ -1,6 +1,4 @@
-box: node
-services:
-  - mies/rethinkdb
+box: neumino/box-thinky
 
 # Build definition
 build:
