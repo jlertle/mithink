@@ -1,4 +1,6 @@
-box: neumino/box-thinky
+box: node
+services:
+  - rethinkdb
 
 # Build definition
 build:
