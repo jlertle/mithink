@@ -5,7 +5,7 @@
   "main": "./lib/index.js",
   "scripts": {
     "test": "mocha --compilers coffee:coffee-script/register --check-leaks -t 20000",
-    "doc": "mocha --compilers coffee:coffee-script/register -R doc > ./gh-pages/index.html"
+    "doc": "mocha --compilers coffee:coffee-script/register -R doc > ./index.html"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,72 @@
+    <section class="suite">
+      <h1>Model</h1>
+      <dl>
+        <section class="suite">
+          <h1>Model.channel</h1>
+          <dl>
+            <dt>is an instance of Socket.io Namespace</dt>
+            <dd><pre><code>expect(Thing).to.have.property('channel');
+expect(Thing.channel.on).to.be.a('function');
+return expect(Thing.channel.once).to.be.a('function');</code></pre></dd>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>Model#guard</h1>
+          <dl>
+            <dt>allows for access control</dt>
+            <dd><pre><code>return Thing.guard({
+  connection: function(socket) {
+    return socket.isAuthenticated;
+  }
+});</code></pre></dd>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>Model#registerActions</h1>
+          <dl>
+            <dt>registers custom Client events that a Model can listen to</dt>
+            <dd><pre><code>return Thing.registerActions({
+  pivot: function(data) {
+    var socket, table;
+    socket = this.socket;
+    table = this.table;
+    return table.group(data.key).run().then(function(pivoted) {
+      return socket.emit(&quot;pivot:&quot; + data.key, pivoted);
+    });
+  }
+});</code></pre></dd>
+          </dl>
+        </section>
+      </dl>
+    </section>
+    <section class="suite">
+      <h1>Server</h1>
+      <dl>
+        <section class="suite">
+          <h1>mithink(config)</h1>
+          <dl>
+            <dt>returns a Mithink instance</dt>
+            <dd><pre><code>var instance;
+instance = mithink();
+hasInstanceMethod(instance, 'createModel');
+hasInstanceMethod(instance, 'bus');
+hasInstanceMethod(instance, 'proxy');</code></pre></dd>
+          </dl>
+        </section>
+        <section class="suite">
+          <h1>Mithink Instance</h1>
+          <dl>
+            <dt>mithink#createModel</dt>
+            <dd><pre><code>return m.createModel(&quot;Animal&quot;, {
+  name: String
+});</code></pre></dd>
+            <dt>mithink#bus</dt>
+            <dd><pre><code>return should.not.Throw(function() {
+  var instance;
+  instance = mithink();
+  return instance.bus(io);
+});</code></pre></dd>
+          </dl>
+        </section>
+      </dl>
+    </section>
