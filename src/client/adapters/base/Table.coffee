@@ -79,7 +79,7 @@ Table.handlers =
         @add doc
       @
 
-    delete: (doc)->
+    destroy: (doc)->
       @rows @filter (row)->
         row.get('id') isnt doc.id
       @

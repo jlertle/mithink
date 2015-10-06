@@ -1,4 +1,4 @@
-box: node
+box: neumino/box-thinky
 
 # Build definition
 build:

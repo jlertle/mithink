@@ -67,7 +67,7 @@ Bus.wireUp = (model)->
         # deleted
         unless doc.isSaved()
           debug "emitting delete..."
-          return model.channel.emit 'delete', doc 
+          return model.channel.emit 'destroy', doc 
 
         # created or saved
         debug "emitting upsert..."

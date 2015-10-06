@@ -143,7 +143,7 @@ populdate a client-side table from RethinkDB.  You can add params to it which ar
 
 When an update is attempted, but failed due to any reason, the table on the client side resyncs the document that failed to update back to the originally value and emits an `http_error`
 
-> remove
+> destroy
 
 Whenever a document is deleted from RethinkDB, this event is received and updates the client-side table replicate if the document exists in the table replicate.
 
@@ -183,3 +183,14 @@ The defaults are as follows:
 > http_error
 
 A variety of situations can cause an `http_error` event to be emitted from the server, a few examples are anytime `thinky` catches an error, or a permission check is not passed.
+
+
+# Roadmap
+
+##### v1.1 (TTL: < 3 Weeks)
++ Documentation
++ Test coverage
++ Wercker CI integration
++ `delete` event will be migrated to the `destroy` event
+
+I mistakenly published the first version using the `delete` keyword in several places because of how easy it is to use in Coffeescript, but I would like to make it as easy to use to ES6/Vanilla JS as possible, so in the next release we will be migrating from that.
