@@ -1,6 +1,6 @@
 box: node
 services:
- - mies/rethinkdb
+ - rethinkdb
 
 # Build definition
 build:
