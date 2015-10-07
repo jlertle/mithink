@@ -26,6 +26,9 @@ module.exports = class Mithril_Row
         @attributes[attr] = m.prop(v)
     @
 
+  save: ->
+    @table.update @toJSON()
+
   has: (attr)->
     if @attributes[attr] then true else false
 

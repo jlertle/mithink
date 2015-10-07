@@ -88,7 +88,7 @@ Mithril_Table.handlers =
     @
 
   destroy: (doc)->
-    @rows @filter (row)->
+    @_rows = @filter (row)->
       row.get('id') isnt doc.id
     @
 

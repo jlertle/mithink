@@ -1,4 +1,6 @@
-box: neumino/box-thinky
+box: node
+services:
+ - neumino/box-rethinkdbdash@2.1.0
 
 # Build definition
 build:

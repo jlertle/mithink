@@ -65,25 +65,13 @@ module.exports = class Table
 
 Table.handlers =
     load: (data)->
-      @_loading = false
-      @_errored = false
-      @reset(data)
-      @
+      throw new Error "your adapter should override Table.handlers.load"
 
     upsert: (doc)->
-      update = @first id: doc.id
-
-      if update
-        update.set(doc)
-      else
-        @add doc
-      @
+      throw new Error "your adapter should override Table.handlers.upsert"
 
     destroy: (doc)->
-      @rows @filter (row)->
-        row.get('id') isnt doc.id
-      @
+      throw new Error "your adapter should override Table.handlers.destroy"
 
     sync: (doc)->
-      @first(id: doc.id).set(doc)
-      @
+      throw new Error "your adapter should override Table.handlers.sync"

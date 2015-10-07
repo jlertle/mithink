@@ -28,7 +28,9 @@ exports.wrap = (Mithink)->
 
     for action, handler of Mithink.adapter.Table.handlers
       do (action, handler)->
+        #console.log "registering handler: #{action}"
         table.channel.on action, (data)->
+          #console.log "activating handler: #{action}"
           handler.call(table, data)
           Mithink.redraw() if Mithink.redraw
 
