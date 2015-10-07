@@ -70,3 +70,28 @@ module.exports = class Mithril_Table extends BaseTable
 
   length: ->
     @rows().length
+
+Mithril_Table.handlers =
+  load: (data)->
+    @_loading = false
+    @_errored = false
+    @reset(data)
+    @
+
+  upsert: (doc)->
+    update = @first id: doc.id
+
+    if update
+      update.set(doc)
+    else
+      @add doc
+    @
+
+  destroy: (doc)->
+    @rows @filter (row)->
+      row.get('id') isnt doc.id
+    @
+
+  sync: (doc)->
+    @first(id: doc.id).set(doc)
+    @
