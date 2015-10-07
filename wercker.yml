@@ -6,6 +6,11 @@ services:
 build:
   # The steps that will be executed on build
   steps:
+    - script:
+    name: echo expose rethinkdb
+    code: |
+      docker run --name some-rethink -v "$PWD:/data" -p 8080:8080 -p 28015:28015 -d rethinkdb
+      
     # A step that executes `npm install` command
     - npm-install
     # A step that executes `npm test` command
