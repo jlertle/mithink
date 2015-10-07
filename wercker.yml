@@ -1,6 +1,6 @@
 box: node
 services:
- - neumino/box-rethinkdbdash@2.1.0
+ - neumino/box-rethinkdbdash
 
 # Build definition
 build:
