@@ -11,11 +11,6 @@ build:
           sudo apt-get install rethinkdb -y
           sudo mkdir -p /etc/rethinkdb/instances.d
           sudo -- sh -c "echo 'bind=all' > /etc/rethinkdb/instances.d/default.conf"
-    - env:
-      WERCKER_RETHINKDB_PORT: 28015
-      WERCKER_RETHINKDB_HOST: $$HOST$$
-      WERCKER_RETHINKDB_URL: $$HOST$$:28015
-      WERCKER_RETHINKDB_VERSION: "1.6.1"
 
     # A step that executes `npm install` command
     - npm-install
