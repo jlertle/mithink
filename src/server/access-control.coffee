@@ -42,7 +42,6 @@ Access_Control = (Bus)->
         return passed
           .then ()->
             log "#{ctx.socket.id} performing #{ctx.action.toUpperCase()} on #{ctx.model._name.toUpperCase()} -- params: #{JSON.stringify(utils.redact args)}"
-            console.log utils.redact args
             action.apply(ctx, args)
           .catch (err={})-> 
             debug(err.message || denyMessage)
@@ -51,7 +50,6 @@ Access_Control = (Bus)->
       if passed
 
         log "#{ctx.socket.id} performing #{ctx.action.toUpperCase()} on #{ctx.model._name.toUpperCase()} -- params: #{JSON.stringify( utils.redact args)}"
-        console.log utils.redact args
         return action.apply(ctx, args) 
       
       debug(denyMessage)
