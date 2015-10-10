@@ -30,7 +30,7 @@ module.exports = class Mithril_Row
     @table.update @toJSON()
 
   has: (attr)->
-    if @attributes[attr] then true else false
+    if @attributes[attr] && @attributes[attr]() isnt null then true else false
 
   get: (attr)->
     return null unless @has attr

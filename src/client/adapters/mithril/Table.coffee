@@ -11,10 +11,8 @@ module.exports = class Mithril_Table extends BaseTable
     @_rows    = rows.map (row)=> Mithril_Table.Row.create(row, @)
     super
 
-  rows: (rowsToAdd)->
-    return @_rows unless rowsToAdd
-    @add(rowsToAdd)
-    @
+  rows: ->
+    return @_rows
 
   map: (fn)->
     Array.prototype.map.call @all(), fn
@@ -34,7 +32,7 @@ module.exports = class Mithril_Table extends BaseTable
     return @at(0)
 
   remove: (query)->
-    @rows @filter (m)->
+    @_rows = @filter (m)->
       state = false
       for attr in Object.keys(query)
         state = m.has(attr) and m.attributes[attr]() isnt query[attr]
@@ -56,7 +54,7 @@ module.exports = class Mithril_Table extends BaseTable
     return @
 
   reset: (rows)->
-    @rows rows.map (row)=> Mithril_Table.Row.create(row, @)
+    @_rows = rows.map (row)=> Mithril_Table.Row.create(row, @)
     @
 
   get: (id)->
@@ -88,7 +86,7 @@ Mithril_Table.handlers =
     @
 
   destroy: (doc)->
-    @_rows = @filter (row)->
+    @remove (row)->
       row.get('id') isnt doc.id
     @
 

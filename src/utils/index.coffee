@@ -28,4 +28,6 @@ exports.allowAll = ->
 
 exports.denyAll = ->
   false
+
+exports.redact = require('./redact')
   
