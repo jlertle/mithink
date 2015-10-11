@@ -38,5 +38,13 @@ module.exports = class Mithril_Row
 
   toJSON: ->
     j = {}
-    j[attr] = @get(attr) for attr, prop of @attributes
+    for attr, prop of @attributes
+      val = @get(attr)
+      if val.toJSON
+        val = val.toJSON()
+      if Array.isArray(val)
+        val = val.map (ele)->
+          return ele unless ele.toJSON
+          ele.toJSON()
+      j[attr] = val
     j

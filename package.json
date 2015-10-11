@@ -33,6 +33,6 @@
   "dependencies": {
     "debug": "^2.2.0",
     "mithril": "^0.2.0",
-    "thinky": "^2.1.6"
+    "thinky": "^2.1.9"
   }
 }
