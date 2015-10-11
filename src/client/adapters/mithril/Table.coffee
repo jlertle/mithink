@@ -69,6 +69,9 @@ module.exports = class Mithril_Table extends BaseTable
   length: ->
     @rows().length
 
+  toJSON: ->
+    @map (m)-> m.toJSON()
+
 Mithril_Table.handlers =
   load: (data)->
     @_loading = false
