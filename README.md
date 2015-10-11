@@ -1,4 +1,4 @@
-# Mithink
+# Mithink [![Build Status](https://travis-ci.org/ondreian/mithink.svg?branch=master)](https://travis-ci.org/ondreian/mithink)
 
 `npm install mithink --save`
 
