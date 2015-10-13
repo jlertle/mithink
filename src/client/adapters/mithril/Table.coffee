@@ -20,6 +20,10 @@ module.exports = class Mithril_Table extends BaseTable
   filter: (fn)->
     Array.prototype.filter.call @all(), fn
 
+  sort: (fn)->
+    @_rows = Array.prototype.sort.call @all(), fn
+    @
+
   where: (query)->
     @filter (m)->
       state = false

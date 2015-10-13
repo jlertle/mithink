@@ -3,6 +3,7 @@ debug        = require('debug')("mithink:bus")
 actions      = require './actions'
 utils        = require '../utils'
 errorHandler = require './error-handler'
+utils        = require '../utils'
 
 
 Bus = (io)-> 
@@ -55,23 +56,23 @@ Bus.extend = (model)->
 
 # don't wireUp a model more than once
 Bus.wireUp = (model)->
-  unless ~Bus.__tables__.indexOf(model._name)
-    Bus.__tables__.push(model._name) 
+  return Bus if ~Bus.__tables__.indexOf(model._name)
+  Bus.__tables__.push(model._name) 
 
-    model.changes().then (feed)->
-      feed.each (err, doc)->
-        if err
-          debug(err)
-          throw err
-        
-        # deleted
-        unless doc.isSaved()
-          debug "emitting destroy..."
-          return model.channel.emit 'destroy', doc 
+  model.changes().then (feed)->
+    feed.each (err, doc)->
+      if err
+        debug(err)
+        throw err
+      
+      # deleted
+      unless doc.isSaved()
+        debug "emitting destroy... #{JSON.stringify( utils.redact doc )}"
+        return model.channel.emit 'destroy', doc 
 
-        # created or saved
-        debug "emitting upsert..."
-        return model.channel.emit 'upsert', doc
+      # created or saved
+      debug "emitting upsert... #{JSON.stringify( utils.redact doc )}"
+      return model.channel.emit 'upsert', doc
 
   Bus
 
